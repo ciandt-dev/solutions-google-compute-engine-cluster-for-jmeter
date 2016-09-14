@@ -153,9 +153,9 @@ class JMeterCluster(object):
       ssh_ready = 0
       for index in xrange(size):
         instance_name = self._MakeInstanceName(index)
-        command = ('gcutil ssh --project=%s --zone=%s '
-                   '--ssh_arg "-o ConnectTimeout=10" '
-                   '--ssh_arg "-o StrictHostKeyChecking=no" '
+        command = ('gcloud compute ssh --project=%s --zone=%s '
+                   '--ssh-flag "-o ConnectTimeout=10" '
+                   '--ssh-flag "-o StrictHostKeyChecking=no" '
                    '%s exit') % (self.project, self.zone, instance_name)
         logging.debug('SSH availability check command: %s', command)
         if subprocess.call(command, shell=True):
@@ -203,13 +203,13 @@ class JMeterCluster(object):
       client_rmi_port = 25000
       # Run "gcutil ssh" command to activate SSH port forwarding.
       command = [
-          'gcutil', '--project', project, 'ssh',
-          '--ssh_arg', '-oStrictHostKeyChecking=no',
-          '--ssh_arg', '-L%(server_port)d:127.0.0.1:%(server_port)d',
-          '--ssh_arg', '-L%(server_rmi_port)d:127.0.0.1:%(server_rmi_port)d',
-          '--ssh_arg', '-R%(client_rmi_port)d:127.0.0.1:%(client_rmi_port)d',
-          '--ssh_arg', '-N',
-          '--ssh_arg', '-f',
+          'gcloud compute', '--project', project, 'ssh',
+          '--ssh-flag="-oStrictHostKeyChecking=no"',
+          '--ssh-flag="-L%(server_port)d:127.0.0.1:%(server_port)d"',
+          '--ssh-flag="-L%(server_rmi_port)d:127.0.0.1:%(server_rmi_port)d"',
+          '--ssh-flag="-R%(client_rmi_port)d:127.0.0.1:%(client_rmi_port)d"',
+          '--ssh-flag="-N"',
+          '--ssh-flag="-f"',
           '%(instance_name)s']
       subprocess.call(
           ' '.join(command) % {
