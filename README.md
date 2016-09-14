@@ -67,29 +67,32 @@ The application requires sufficient Google Compute Engine instance and CPU quota
 to set up JMeter server cluster on Google Compute Engine.
 Note that the default instances used by the application have 2 CPUs each.
 
-The application requires [gcutil](https://developers.google.com/compute/docs/gcutil/)
+The application requires [gcloud](https://cloud.google.com/sdk/gcloud/)
 command line tool.  In addition, setting up
 [gsutil](https://developers.google.com/storage/docs/gsutil)
 is also helpful to set up the application, although gsutil is not a requirement.
+Both are part of [Google Cloud SDK](https://cloud.google.com/sdk/docs/). Simply 
+download and install it to have access to these command-line tools. 
 
-##### `gcutil` configuration
 
-If this is the first time running `gcutil` for the project, run the following
-command to authorize `gcutil` to access the project.
+##### `gcloud` configuration
 
-    gcutil auth --project=<project ID>
+If this is the first time running `gcloud` for the project, run the following
+command to authorize `gcloud` to access the project.
 
-Default project of gcutil must be set to the project where JMeter servers
+    gcloud auth login --project <project ID>
+
+Default project of gcloud must be set to the project where JMeter servers
 are started.  The following command
-[sets gcutil default project](https://developers.google.com/compute/docs/gcutil/#project).
+[sets gcloud default project](https://cloud.google.com/sdk/gcloud/reference/config/set#project).
 
-    gcutil getproject --project=<project ID> --cache_flag_values
+    gcloud config set project <project ID>
 
-If this is the first time using `gcutil` for operation that requires SSH
-credentials (such as "gcutil addinstance" or "gcutil ssh"), gcutil creates
-new SSH credentials.  At that time, passphrase is asked.
+If this is the first time using `gcloud` for operations that requires SSH
+credentials (such as "gcloud compute instances create" or "gcloud compute ssh"), 
+gcutil creates new SSH credentials.  At that time, passphrase is asked.
 The **passphrase must be empty** for the application to work properly.
-If SSH credentials with passphrase already exists for gcutil, the application
+If SSH credentials with passphrase already exists for gcloud, the application
 fails to establish SSH forwarding.  In this case, remove existing credentials
 at `~/.ssh/google_compute_engine*` and re-create SSH credentials.
 
@@ -112,7 +115,7 @@ Download google-api-python-client-1.2.tar.gz from
 [download page](http://code.google.com/p/google-api-python-client/downloads/list)
 or by the following command.
 
-    curl -O http://google-api-python-client.googlecode.com/files/google-api-python-client-1.2.tar.gz
+    curl -O https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/google-api-python-client/google-api-python-client-1.2.tar.gz
 
 Set up the library in `compute_engine_cluster_for_jmeter` directory.
 
@@ -129,7 +132,7 @@ Download httplib2-0.8.tar.gz from
 [download page](https://code.google.com/p/httplib2/downloads/list).
 or by the following command.
 
-    curl -O https://httplib2.googlecode.com/files/httplib2-0.8.tar.gz
+    curl -O https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/httplib2/httplib2-0.8.zip
 
 Set up the library in `compute_engine_cluster_for_jmeter` directory.
 
@@ -144,7 +147,7 @@ Download python-gflags-2.0.tar.gz from
 [download page](http://code.google.com/p/python-gflags/downloads/list).
 or by the following command.
 
-    curl -O http://python-gflags.googlecode.com/files/python-gflags-2.0.tar.gz
+    curl -O https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/python-gflags/python-gflags-2.0.tar.gz
 
 Set up the library in `compute_engine_cluster_for_jmeter` directory.
 
@@ -361,3 +364,11 @@ Unit tests can be directly executed.
 
 Note some unit tests simulate error conditions, and those tests shows
 error messages.
+
+
+Known Issues
+--------------------------------
+
+* JMeter versions 2.13 and 3.0 do NOT work with this setup. It's likely that no
+versions newer than 2.9 will work. There is an open issue for that, we 
+appreciate any help to investigate :-)
